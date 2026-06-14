@@ -1,0 +1,75 @@
+{
+  "_comment": "MCP 추천 + 무료 자동화/디자인/영상 도구 마스터 풀. 대시보드 '크롤링 > MCP 추천'에서 사용. 매일 daily.json이 이 풀에서 '오늘의 추천'을 뽑아 갱신됩니다.",
+  "updatedManually": "2026-06-14",
+  "groups": [
+    {
+      "id": "video",
+      "title": "🎬 영상 제작 (매일 영상)",
+      "items": [
+        { "name": "Replicate", "url": "https://replicate.com", "free": "부분무료(크레딧)", "note": "MiniMax video-01, Wan, LTX 등 영상모델 API. MCP/자동화 연동 쉬움", "mcp": true },
+        { "name": "fal.ai", "url": "https://fal.ai", "free": "부분무료", "note": "초고속 영상/이미지 생성 API, 워크플로 자동화", "mcp": true },
+        { "name": "Hugging Face Spaces", "url": "https://huggingface.co/spaces", "free": "무료(대기열)", "note": "Wan2.2/LTX 등 오픈소스 영상모델 무료 체험", "mcp": false },
+        { "name": "Arting AI", "url": "https://arting.ai/text-to-video", "free": "무료·무가입·워터마크X", "note": "텍스트→영상 즉시 생성", "mcp": false },
+        { "name": "Upsampler", "url": "https://upsampler.com/free-video-generator-no-signup", "free": "무료·무가입", "note": "Wan 2.2 / LTX 모델 선택", "mcp": false },
+        { "name": "Vidnoz", "url": "https://www.vidnoz.com/text-to-video-ai.html", "free": "무료 티어", "note": "아바타·텍스트→영상", "mcp": false },
+        { "name": "Remotion", "url": "https://www.remotion.dev", "free": "오픈소스", "note": "React 코드로 '페이스리스' 영상 자동 렌더 (MCP 서버 있음)", "mcp": true }
+      ]
+    },
+    {
+      "id": "design",
+      "title": "🎨 디자인 · 상세페이지 · 배너 · 명함",
+      "items": [
+        { "name": "Canva", "url": "https://www.canva.com", "free": "무료 티어", "note": "상세페이지·배너·명함 템플릿 최다, 자동화 API/앱", "mcp": false },
+        { "name": "Adobe Express", "url": "https://www.adobe.com/express/", "free": "무료 티어", "note": "배너·명함·SNS 디자인, 브라우저", "mcp": false },
+        { "name": "VistaCreate", "url": "https://create.vista.com", "free": "무료 티어(넉넉)", "note": "100K+ 템플릿, 명함·배너, VistaPrint 연동", "mcp": false },
+        { "name": "Pixlr", "url": "https://pixlr.com", "free": "무료", "note": "Pixlr X(드래그) / E(포토샵형) 편집", "mcp": false },
+        { "name": "Kittl", "url": "https://www.kittl.com", "free": "무료 티어", "note": "로고·명함·타이포 디자인", "mcp": false },
+        { "name": "Gamma", "url": "https://gamma.app", "free": "무료 티어", "note": "AI로 상세페이지/덱 자동 생성", "mcp": false },
+        { "name": "Figma", "url": "https://www.figma.com", "free": "무료 티어", "note": "정밀 디자인, MCP 서버 공식 지원", "mcp": true }
+      ]
+    },
+    {
+      "id": "image",
+      "title": "🖼️ 이미지 생성 (썸네일·상세컷)",
+      "items": [
+        { "name": "Leonardo AI", "url": "https://leonardo.ai", "free": "무료 일일 토큰", "note": "제품 이미지·썸네일", "mcp": false },
+        { "name": "Ideogram", "url": "https://ideogram.ai", "free": "무료 티어", "note": "이미지 안에 한글/문구 또렷", "mcp": false },
+        { "name": "ComfyUI", "url": "https://www.comfy.org", "free": "오픈소스(로컬)", "note": "Stable Diffusion 노드형, 완전 자동화 파이프라인", "mcp": true },
+        { "name": "DALL·E (ChatGPT)", "url": "https://chatgpt.com", "free": "부분무료", "note": "대화로 이미지 생성, MCP 연동", "mcp": true }
+      ]
+    },
+    {
+      "id": "crawl",
+      "title": "🕷️ 크롤링 · 스크래핑",
+      "items": [
+        { "name": "Apify", "url": "https://apify.com", "free": "무료 크레딧", "note": "기성 스크래퍼(Actor) 다수, 상품 크롤링에 최적", "mcp": true },
+        { "name": "Firecrawl", "url": "https://www.firecrawl.dev", "free": "무료 티어", "note": "URL→정제 마크다운/JSON, LLM 친화", "mcp": true },
+        { "name": "Playwright MCP", "url": "https://github.com/microsoft/playwright-mcp", "free": "오픈소스", "note": "브라우저 자동조작 MCP(공식)", "mcp": true },
+        { "name": "Scrapling", "url": "https://github.com/D4Vinci/Scrapling", "free": "오픈소스", "note": "스텔스 스크래핑, MCP 서버 제공", "mcp": true },
+        { "name": "ScrapeGraphAI", "url": "https://scrapegraphai.com", "free": "오픈소스", "note": "LLM 기반 구조화 추출", "mcp": true }
+      ]
+    },
+    {
+      "id": "automation",
+      "title": "⚙️ 자동화 · 워크플로우",
+      "items": [
+        { "name": "n8n", "url": "https://n8n.io", "free": "셀프호스팅 무료", "note": "노드형 자동화, 크롤링→가공→등록 파이프라인 핵심", "mcp": true },
+        { "name": "Make", "url": "https://www.make.com", "free": "무료 티어", "note": "오퍼레이션 과금, 저렴한 비주얼 자동화", "mcp": false },
+        { "name": "Zapier", "url": "https://zapier.com", "free": "무료 티어", "note": "연동 앱 최다, 학습난이도 최저", "mcp": false },
+        { "name": "Gumloop", "url": "https://www.gumloop.com", "free": "무료 티어", "note": "AI 중심 노코드 자동화", "mcp": false },
+        { "name": "Google AI Studio", "url": "https://aistudio.google.com", "free": "무료", "note": "Gemini로 가공·분류 자동화", "mcp": false }
+      ]
+    },
+    {
+      "id": "directory",
+      "title": "🔌 MCP 디렉토리 (서버 탐색)",
+      "items": [
+        { "name": "PulseMCP", "url": "https://www.pulsemcp.com", "free": "무료", "note": "MCP 서버 검색/카탈로그", "mcp": true },
+        { "name": "Smithery", "url": "https://smithery.ai", "free": "무료", "note": "MCP 서버 호스팅/설치", "mcp": true },
+        { "name": "Glama MCP", "url": "https://glama.ai/mcp/servers", "free": "무료", "note": "MCP 서버 목록/품질", "mcp": true },
+        { "name": "MCP.Directory", "url": "https://mcp.directory", "free": "무료", "note": "카테고리별 베스트 서버", "mcp": true },
+        { "name": "Awesome MCP Servers", "url": "https://github.com/punkpeye/awesome-mcp-servers", "free": "오픈소스", "note": "깃허브 큐레이션 목록", "mcp": true }
+      ]
+    }
+  ]
+}

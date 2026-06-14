@@ -1,0 +1,42 @@
+{
+  "_comment": "scripts/update-daily.mjs가 매일 자동 생성합니다. 수동 편집 불필요.",
+  "date": "2026-06-14",
+  "picks": [
+    {
+      "group": "🎬 영상 제작 (매일 영상)",
+      "name": "Upsampler",
+      "url": "https://upsampler.com/free-video-generator-no-signup",
+      "note": "Wan 2.2 / LTX 모델 선택"
+    },
+    {
+      "group": "🎨 디자인 · 상세페이지 · 배너 · 명함",
+      "name": "Kittl",
+      "url": "https://www.kittl.com",
+      "note": "로고·명함·타이포 디자인"
+    },
+    {
+      "group": "🖼️ 이미지 생성 (썸네일·상세컷)",
+      "name": "Ideogram",
+      "url": "https://ideogram.ai",
+      "note": "이미지 안에 한글/문구 또렷"
+    },
+    {
+      "group": "🕷️ 크롤링 · 스크래핑",
+      "name": "Apify",
+      "url": "https://apify.com",
+      "note": "기성 스크래퍼(Actor) 다수, 상품 크롤링에 최적"
+    },
+    {
+      "group": "⚙️ 자동화 · 워크플로우",
+      "name": "n8n",
+      "url": "https://n8n.io",
+      "note": "노드형 자동화, 크롤링→가공→등록 파이프라인 핵심"
+    },
+    {
+      "group": "🔌 MCP 디렉토리 (서버 탐색)",
+      "name": "PulseMCP",
+      "url": "https://www.pulsemcp.com",
+      "note": "MCP 서버 검색/카탈로그"
+    }
+  ]
+}
