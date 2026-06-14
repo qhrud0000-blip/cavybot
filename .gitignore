@@ -18,8 +18,8 @@ node_modules/
 dist/
 
 # 브라우저 자동화: 로그인 세션·개인 설정 — 절대 커밋 금지
-auto-입력/.user-data/
-auto-입력/config.json
+auto-fill/.user-data/
+auto-fill/config.json
 
 # OS/에디터
 .DS_Store

@@ -1,0 +1,15 @@
+{
+  "_도움말": "이 파일을 config.json 으로 복사한 뒤, 각 프로젝트의 '실제 URL'을 채우세요. URL은 해당 프로젝트를 브라우저에서 연 주소창 값입니다. 비우면(빈 문자열) 그 항목은 건너뜁니다.",
+  "projects": [
+    { "platform": "chatgpt", "name": "아이라",        "url": "", "file": "instructions/chatgpt-aira.txt" },
+    { "platform": "chatgpt", "name": "쇼핑쇼츠",        "url": "", "file": "instructions/chatgpt-shopshorts.txt" },
+    { "platform": "chatgpt", "name": "가사",           "url": "", "file": "instructions/chatgpt-lyrics.txt" },
+    { "platform": "chatgpt", "name": "바이브코딩강의",   "url": "", "file": "instructions/chatgpt-vibecoding.txt" },
+    { "platform": "chatgpt", "name": "2026카합10269",   "url": "", "file": "instructions/chatgpt-legal.txt" },
+    { "platform": "chatgpt", "name": "비밀번호",        "url": "", "file": "instructions/chatgpt-password.txt" },
+    { "platform": "claude",  "name": "인스타/유튜브/블로그", "url": "", "file": "instructions/claude-insta-youtube-blog.txt" },
+    { "platform": "claude",  "name": "일일 업무 자동화 및 사업 계획 대시보드", "url": "", "file": "instructions/claude-daily-dashboard.txt" },
+    { "platform": "claude",  "name": "분야별 자동화 AI 기획", "url": "", "file": "instructions/claude-field-automation.txt" },
+    { "platform": "claude",  "name": "상품상세페이지 자동화", "url": "", "file": "instructions/claude-detailpage.txt" }
+  ]
+}
