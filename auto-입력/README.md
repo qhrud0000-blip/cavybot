@@ -11,15 +11,35 @@ ChatGPT/Claude **프로젝트 지침**을 브라우저 자동화로 입력하는
 ## 준비물
 - Node.js 18+ 설치
 
-## 설치 & 실행
-```bash
-cd auto-입력
-npm install
-npm run setup           # Playwright용 Chromium 1회 설치
-cp config.example.json config.json
-# config.json 을 열어 각 프로젝트의 '실제 URL'을 채운다 (브라우저에서 그 프로젝트 연 주소)
-npm start
+## ⭐ 가장 쉬운 실행 (PowerShell 한 줄 — 매번 최신 지침 자동 반영)
+
+PowerShell에 **아래 한 줄**을 붙여넣고 Enter. 저장소가 없어도 자동으로 받아 실행합니다.
+재실행할 때마다 **GitHub 최신 지침을 자동으로 받아 적용**하고, 한 번 입력한 **URL 설정은 유지**됩니다.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol='Tls12'; $t=$env:TEMP; iwr 'https://github.com/qhrud0000-blip/cavybot/archive/refs/heads/claude/cavybot-project-structure-l2aip0.zip' -OutFile $t\cavybot.zip; Expand-Archive $t\cavybot.zip $t\cavybot -Force; & (gci $t\cavybot\cavybot-*\auto-입력\run.ps1).FullName"
 ```
+
+- 처음 실행: `config.json`이 메모장으로 열림 → 각 프로젝트 url 채우고 저장·닫기.
+- 이후 실행: URL은 `%USERPROFILE%\cavybot-auto\config.json`에 보관되어 자동 재사용.
+- **더블클릭 실행**: 한 번 받은 뒤 `%USERPROFILE%\cavybot-auto\repo\...\auto-입력\실행.bat` 를 더블클릭해도 동일하게 동작(최신 지침 자동 갱신).
+
+### 지침을 바꾸고 싶을 때 (업데이트 자동화)
+1. GitHub에서 `프로젝트-지침/완성본/*.txt` (또는 `00`~`10` 원본)를 웹에서 편집·저장,
+2. 위 한 줄(또는 `실행.bat`)을 다시 실행 → **바뀐 지침이 자동 반영**되어 입력됩니다.
+
+---
+
+## 수동 설치 & 실행 (원하면)
+```powershell
+cd auto-입력
+npm.cmd install
+npm.cmd run setup        # Playwright용 Chromium 1회 설치
+copy config.example.json config.json
+notepad config.json      # 각 프로젝트 '실제 URL' 입력 후 저장
+npm.cmd start
+```
+> PowerShell에서 `npm`이 막히면(PSSecurityException) `npm.cmd` 로 쓰거나 먼저 `Set-ExecutionPolicy -Scope Process Bypass` 실행.
 
 ## 진행 흐름
 1. 브라우저가 뜨면 **ChatGPT(chatgpt.com)·Claude(claude.ai)에 직접 로그인(+2FA)** → 터미널에서 Enter.
