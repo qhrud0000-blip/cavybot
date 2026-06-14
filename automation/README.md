@@ -30,9 +30,13 @@ docker run -it --rm -p 5678:5678 -v n8n_data:/home/node/.n8n n8nio/n8n
 # http://localhost:5678
 ```
 2) 키 등록: `.env.example` → `.env` 복사 후 채우기. n8n 실행 시 환경변수로 주입하거나 Credentials에 등록.
-3) n8n 화면 → Import from File → `n8n-workflow.json` 선택.
+3) n8n 화면 → Import from File → 아래 중 원하는 저장 버전 선택.
+   - 기본(저장 노드 직접 연결): `n8n-workflow.json`
+   - **구글 시트 저장**: `n8n-workflow-google-sheets.json` (Google Sheets Credentials 필요, `YOUR_GOOGLE_SHEET_ID` 교체)
+   - **노션 저장**: `n8n-workflow-notion.json` (Notion Credentials 필요, `YOUR_NOTION_DATABASE_ID` + 속성명 교체)
 4) 노드의 `{{$env.FIRECRAWL_API_KEY}}`, `{{$env.GEMINI_API_KEY}}`가 실제 키를 읽는지 확인.
-5) 마지막 "결과" 노드에 **Google Sheets / Notion / 블로그** 노드를 연결해 초안 저장.
+5) 구글시트/노션 버전을 쓰면 저장 노드가 이미 연결돼 있습니다. (속성/시트명만 본인 것으로 교체)
+   - 노션 버전은 노션 DB 속성명(`상태`, `참고링크`, `쿠팡링크`)을 실제 DB에 맞게 매핑하세요.
 6) 수동 1회 실행(Execute Workflow)으로 점검 → 정상이면 Activate.
 
 ## 무료 유지 팁 (매일 생성분만 사용)

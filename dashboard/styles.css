@@ -126,3 +126,23 @@ body {
 .card .free { font-size: 11px; color: var(--accent-2); margin: 3px 0; }
 .card .note { font-size: 12px; color: var(--muted); }
 .foot { color: var(--muted); font-size: 12px; margin-top: 14px; text-align: center; }
+
+/* CRUD 도구 버튼 + 아이템 구조 */
+.col-tools { margin-left: 8px; display: flex; gap: 3px; }
+.item-main { flex: 1; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;
+  background: none; border: none; padding: 0; font: inherit; cursor: inherit; text-align: left; }
+button.item-main.asbtn { cursor: pointer; }
+.item.cta .item-main { color: #0c1020; font-weight: 800; }
+.item-tools { display: none; gap: 2px; margin-left: 6px; }
+.item:hover .item-tools { display: flex; }
+.tool {
+  background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 6px;
+  color: var(--muted); cursor: pointer; font-size: 11px; line-height: 1; padding: 3px 5px;
+}
+.tool:hover { border-color: var(--accent); color: var(--text); }
+.item.subheader .item-tools .tool { background: transparent; }
+.add-col {
+  min-width: 200px; align-self: flex-start; background: transparent; color: var(--muted);
+  border: 1.5px dashed var(--line); border-radius: var(--radius); padding: 14px; cursor: pointer; font-size: 14px;
+}
+.add-col:hover { border-color: var(--accent); color: var(--text); }
