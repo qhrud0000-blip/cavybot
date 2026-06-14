@@ -69,6 +69,8 @@ const DEFAULT_BOARD = [
     id: "automation",
     title: "⚙️ 자동화",
     items: [
+      { id: "free-pipeline", label: "⚡ 무료 자동화 파이프라인", url: "../automation/README.md", cta: true },
+      { id: "auto-sub", type: "sub", label: "도구" },
       { id: "n8n", label: "n8n (오케스트레이터)", url: "https://n8n.io" },
       { id: "make", label: "Make", url: "https://www.make.com" },
       { id: "zapier", label: "Zapier", url: "https://zapier.com" },
