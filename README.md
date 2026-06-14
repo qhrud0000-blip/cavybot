@@ -77,7 +77,11 @@ cavybot/
 - 카테고리(컬럼)·메뉴(아이템) **마우스 드래그로 위치 이동** (localStorage 저장)
 - **크롤링 → 추천 → 🔌 MCP 추천** 버튼: 영상·디자인·명함·배너·크롤링·자동화 **무료 도구/MCP 목록**
 - **⭐ 오늘의 추천 매일 자동 갱신** (GitHub Actions)
+- **📎 파일 보관함**: 카테고리별 엑셀·PPT·PDF·워드 **업로드/다운로드/수정** + 문서 템플릿 생성
+- **CRUD**: 카테고리·메뉴 추가·수정·복사·삭제
 - 실행: `cd dashboard && python3 -m http.server 8080` → http://localhost:8080
+
+프로젝트별 연동·실행 현황: [`연동-현황.md`](연동-현황.md) · 문서 템플릿: [`templates/`](templates/README.md) · 연결 테스트: `node scripts/test-connections.mjs`
 
 쿠팡파트너스 자동 수익 파이프라인 기획서: [`claude-프로젝트/05-쿠팡파트너스-자동화/자동화-파이프라인-기획.md`](claude-프로젝트/05-쿠팡파트너스-자동화/자동화-파이프라인-기획.md)
 

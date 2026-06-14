@@ -10,7 +10,7 @@
   <header class="topbar">
     <div class="brand">🐹 cavybot 대시보드</div>
     <div class="actions">
-      <span class="hint"><b>드래그</b>로 이동 · 카드/메뉴에 마우스 올리면 <b>＋추가 ✎수정 ⧉복사 🗑삭제</b></span>
+      <span class="hint"><b>드래그</b>로 이동 · 카드에 마우스 올리면 <b>＋추가 📎파일 ✎수정 ⧉복사 🗑삭제</b></span>
       <button id="resetBtn" class="btn ghost" title="기본 배치로 되돌리기">↺ 초기화</button>
     </div>
   </header>
@@ -27,6 +27,34 @@
       <div id="mcpDaily" class="daily"></div>
       <div id="mcpBody" class="mcp-body"></div>
       <p class="foot">매일 <b>오늘의 추천</b>이 자동 갱신됩니다 · 영상·디자인·명함·배너·크롤링·자동화 무료 도구 모음</p>
+    </div>
+  </div>
+
+  <!-- 파일 보관함 모달 -->
+  <div id="fileModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="fileTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="fileTitle">📎 파일 보관함</h2>
+        <button id="fileClose" class="btn ghost" aria-label="닫기">✕</button>
+      </div>
+
+      <div class="file-upload">
+        <label class="btn" for="fileInput">⬆️ 파일 업로드</label>
+        <input id="fileInput" type="file" multiple hidden />
+        <span class="hint">엑셀·PPT·PDF·워드 등 무엇이든. 이 기기 브라우저(IndexedDB)에 저장됩니다.</span>
+      </div>
+
+      <div class="doc-create">
+        <span class="dc-label">새 문서 템플릿 만들기:</span>
+        <button class="btn ghost" data-make="xlsx">📊 엑셀(.xlsx)</button>
+        <button class="btn ghost" data-make="doc">📝 워드(.doc)</button>
+        <button class="btn ghost" data-make="pdf">📄 PDF</button>
+        <button class="btn ghost" data-make="pptx">📑 PPT(.pptx)</button>
+        <button class="btn ghost" data-make="csv">📋 CSV</button>
+      </div>
+
+      <div id="fileList" class="file-list"></div>
+      <p id="fileMsg" class="foot"></p>
     </div>
   </div>
 

@@ -186,6 +186,7 @@ function renderColumn(col) {
   const tools = document.createElement("span");
   tools.className = "col-tools";
   tools.appendChild(toolBtn("＋", "메뉴 추가", () => addItem(col.id)));
+  tools.appendChild(toolBtn("📎", "파일 보관함", () => openFiles(col.id, col.title)));
   tools.appendChild(toolBtn("✎", "이름 수정", () => renameCategory(col.id)));
   tools.appendChild(toolBtn("⧉", "카테고리 복사", () => duplicateCategory(col.id)));
   tools.appendChild(toolBtn("🗑", "카테고리 삭제", () => deleteCategory(col.id)));
@@ -378,5 +379,183 @@ document.getElementById("resetBtn").addEventListener("click", () => {
 });
 
 function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+// ====================== 파일 보관함 (IndexedDB) ======================
+const fileModal = document.getElementById("fileModal");
+let currentCat = null;
+
+function idb() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open("cavybotFiles", 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains("files")) {
+        const st = db.createObjectStore("files", { keyPath: "id", autoIncrement: true });
+        st.createIndex("cat", "cat", { unique: false });
+      }
+    };
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+async function fileAdd(rec) {
+  const db = await idb();
+  return new Promise((res, rej) => {
+    const tx = db.transaction("files", "readwrite");
+    tx.objectStore("files").add(rec);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  });
+}
+async function fileListByCat(cat) {
+  const db = await idb();
+  return new Promise((res, rej) => {
+    const out = [];
+    const idx = db.transaction("files", "readonly").objectStore("files").index("cat");
+    const cur = idx.openCursor(IDBKeyRange.only(cat));
+    cur.onsuccess = (e) => { const c = e.target.result; if (c) { out.push(c.value); c.continue(); } else res(out); };
+    cur.onerror = () => rej(cur.error);
+  });
+}
+async function fileGet(id) {
+  const db = await idb();
+  return new Promise((res, rej) => {
+    const r = db.transaction("files", "readonly").objectStore("files").get(id);
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  });
+}
+async function filePut(rec) {
+  const db = await idb();
+  return new Promise((res, rej) => {
+    const tx = db.transaction("files", "readwrite");
+    tx.objectStore("files").put(rec);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  });
+}
+async function fileDel(id) {
+  const db = await idb();
+  return new Promise((res, rej) => {
+    const tx = db.transaction("files", "readwrite");
+    tx.objectStore("files").delete(id);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  });
+}
+
+async function openFiles(catId, catTitle) {
+  currentCat = catId;
+  document.getElementById("fileTitle").textContent = `📎 ${catTitle} — 파일 보관함`;
+  document.getElementById("fileMsg").textContent = "";
+  fileModal.classList.remove("hidden");
+  await refreshFiles();
+}
+
+async function refreshFiles() {
+  const list = document.getElementById("fileList");
+  let files;
+  try { files = await fileListByCat(currentCat); }
+  catch (e) { list.innerHTML = '<div class="file-empty">브라우저 저장소를 사용할 수 없습니다.</div>'; return; }
+  if (!files.length) { list.innerHTML = '<div class="file-empty">아직 파일이 없습니다. 업로드하거나 템플릿을 만들어 보세요.</div>'; return; }
+  list.innerHTML = "";
+  files.sort((a, b) => b.updated - a.updated).forEach((f) => {
+    const row = document.createElement("div");
+    row.className = "file-row";
+    row.innerHTML = `<span class="fname">${esc(f.name)}</span><span class="fmeta">${fmtSize(f.size)}</span>`;
+    const dl = toolBtn("⬇️", "다운로드", () => download(f.blob, f.name));
+    const rn = toolBtn("✎", "이름변경", async () => {
+      const name = prompt("새 파일 이름:", f.name); if (!name) return;
+      f.name = name.trim(); f.updated = Date.now(); await filePut(f); refreshFiles();
+    });
+    const rm = toolBtn("🗑", "삭제", async () => {
+      if (!confirm(`"${f.name}" 삭제할까요?`)) return; await fileDel(f.id); refreshFiles();
+    });
+    row.append(dl, rn, rm);
+    list.appendChild(row);
+  });
+}
+
+async function handleUpload(fileListObj) {
+  const msg = document.getElementById("fileMsg");
+  let n = 0;
+  for (const f of fileListObj) {
+    try {
+      await fileAdd({ cat: currentCat, name: f.name, type: f.type, size: f.size, blob: f, updated: Date.now() });
+      n++;
+    } catch (e) { msg.textContent = "업로드 실패: " + e.message; }
+  }
+  if (n) msg.textContent = `${n}개 업로드 완료. (수정은 다운로드→편집→다시 업로드)`;
+  refreshFiles();
+}
+
+function download(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+function fmtSize(b) { if (b < 1024) return b + "B"; if (b < 1048576) return (b / 1024).toFixed(1) + "KB"; return (b / 1048576).toFixed(1) + "MB"; }
+
+// ---- 문서 템플릿 생성 ----
+const CAL_ROWS = [
+  ["날짜", "채널", "포맷", "주제", "상태", "비고"],
+  ["", "인스타", "릴스", "", "기획", ""],
+  ["", "인스타", "카드뉴스", "", "기획", ""],
+  ["", "블로그", "리뷰", "", "기획", ""],
+];
+
+function loadScript(src) {
+  return new Promise((res, rej) => {
+    if ([...document.scripts].some((s) => s.src === src)) return res();
+    const s = document.createElement("script"); s.src = src;
+    s.onload = res; s.onerror = () => rej(new Error("스크립트 로드 실패(인터넷 필요): " + src));
+    document.head.appendChild(s);
+  });
+}
+
+async function makeDoc(kind) {
+  const msg = document.getElementById("fileMsg");
+  try {
+    if (kind === "csv") {
+      const csv = "﻿" + CAL_ROWS.map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
+      saveTemplate(new Blob([csv], { type: "text/csv" }), "콘텐츠-캘린더.csv");
+    } else if (kind === "doc") {
+      const html = `<html><head><meta charset="utf-8"></head><body>
+        <h1>주간 콘텐츠 리포트</h1><p>기간: </p>
+        <h2>이번 주 발행</h2><ul><li></li></ul>
+        <h2>성과 요약</h2><p></p><h2>다음 주 액션</h2><ol><li></li></ol></body></html>`;
+      saveTemplate(new Blob([html], { type: "application/msword" }), "주간리포트.doc");
+    } else if (kind === "xlsx") {
+      await loadScript("https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js");
+      const ws = XLSX.utils.aoa_to_sheet(CAL_ROWS);
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "캘린더");
+      XLSX.writeFile(wb, "콘텐츠-캘린더.xlsx");
+      msg.textContent = "엑셀(.xlsx) 다운로드 완료."; return;
+    } else if (kind === "pdf") {
+      await loadScript("https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js");
+      const { jsPDF } = window.jspdf; const doc = new jsPDF();
+      doc.setFontSize(16); doc.text("cavybot - Project Brief", 14, 20);
+      doc.setFontSize(11);
+      doc.text(["Project:", "Goal:", "Channel: Instagram (@ai_ang2)", "Deadline:", "Notes:"], 14, 34);
+      doc.save("project-brief.pdf");
+      msg.textContent = "PDF 다운로드 완료."; return;
+    } else if (kind === "pptx") {
+      await loadScript("https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js");
+      const p = new PptxGenJS(); const s = p.addSlide();
+      s.addText("cavybot 콘텐츠 기획", { x: 0.5, y: 0.5, fontSize: 28, bold: true });
+      s.addText("주제 / 후킹 / 구성 / CTA", { x: 0.5, y: 1.6, fontSize: 16 });
+      p.writeFile({ fileName: "콘텐츠-기획.pptx" });
+      msg.textContent = "PPT(.pptx) 다운로드 완료."; return;
+    }
+    msg.textContent = "템플릿 다운로드 완료.";
+  } catch (e) {
+    msg.textContent = (kind === "xlsx" ? "엑셀 생성 실패 → CSV로 대체합니다. " : "") + e.message;
+    if (kind === "xlsx") makeDoc("csv");
+  }
+}
+function saveTemplate(blob, name) { download(blob, name); }
+
+document.getElementById("fileClose").addEventListener("click", () => fileModal.classList.add("hidden"));
+fileModal.addEventListener("click", (e) => { if (e.target === fileModal) fileModal.classList.add("hidden"); });
+document.getElementById("fileInput").addEventListener("change", (e) => { handleUpload(e.target.files); e.target.value = ""; });
+document.querySelectorAll(".doc-create [data-make]").forEach((b) =>
+  b.addEventListener("click", () => makeDoc(b.dataset.make)));
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") fileModal.classList.add("hidden"); });
 
 render();
