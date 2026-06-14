@@ -4,7 +4,11 @@
 
 ## 실행 방법
 
-- **간단:** `dashboard/index.html`을 브라우저로 열기.
+- **⭐ 가장 간단 (설정 0):** [`cavybot-dashboard.html`](cavybot-dashboard.html) **하나만 더블클릭**.
+  - CSS·JS·MCP 추천 데이터가 모두 안에 들어있어(단일 파일) 서버·인터넷 없이 열립니다.
+  - 다시 빌드: `node scripts/build-standalone.mjs`
+  - (단일 파일을 repo 밖으로 옮기면 `../프롬프트` 같은 내부 문서 링크만 끊깁니다. 외부 링크·금고·MCP·파일보관함은 정상)
+- **분리형:** `dashboard/index.html`을 열기.
   - 단, 일부 브라우저는 `file://`에서 `fetch`(MCP 추천 데이터 로드)를 막습니다. 그럴 땐 아래 로컬 서버 사용.
 - **권장(로컬 서버):**
   ```bash

@@ -3,9 +3,10 @@ name: Deploy 대시보드 to GitHub Pages
 # 대시보드를 공개 URL로 열 수 있게 배포합니다.
 # 저장소 전체를 올려서 대시보드의 상대경로(../프롬프트, ../automation 등)가 동작하게 합니다.
 # 대시보드 주소: https://<사용자>.github.io/cavybot/dashboard/
+# 주의: 먼저 저장소 Settings → Pages → Source 를 "GitHub Actions"로 1회 설정해야 합니다.
+# (자동화 토큰은 Pages를 켤 권한이 없어 자동 활성화가 안 됩니다.)
+# 설정 후 Actions 탭에서 이 워크플로를 Run 하면 배포됩니다.
 on:
-  push:
-    branches: [claude/cavybot-project-structure-l2aip0, main]
   workflow_dispatch: {}
 
 permissions:
