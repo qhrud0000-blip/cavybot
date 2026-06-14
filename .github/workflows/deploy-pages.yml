@@ -1,0 +1,35 @@
+name: Deploy 대시보드 to GitHub Pages
+
+# 대시보드를 공개 URL로 열 수 있게 배포합니다.
+# 저장소 전체를 올려서 대시보드의 상대경로(../프롬프트, ../automation 등)가 동작하게 합니다.
+# 대시보드 주소: https://<사용자>.github.io/cavybot/dashboard/
+on:
+  push:
+    branches: [claude/cavybot-project-structure-l2aip0, main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+      - id: deployment
+        uses: actions/deploy-pages@v4
