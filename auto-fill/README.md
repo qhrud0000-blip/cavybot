@@ -20,7 +20,7 @@ PowerShell에 **아래 한 줄**을 붙여넣고 Enter. 저장소가 없어도 �
 > 한글 파일명 깨짐 방지를 위해 **tar**(Windows 10+ 내장)로 압축을 풉니다.
 
 ```powershell
-$ProgressPreference='SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol='Tls12'; $t="$env:TEMP\cb"; Remove-Item $t -Recurse -Force -ErrorAction SilentlyContinue; New-Item -Type Directory -Force $t | Out-Null; Invoke-WebRequest 'https://github.com/qhrud0000-blip/cavybot/archive/refs/heads/claude/cavybot-project-structure-l2aip0.zip' -OutFile "$t\r.zip"; tar -xf "$t\r.zip" -C $t; & (Get-ChildItem "$t\cavybot-*\auto-fill\run.ps1").FullName
+$ProgressPreference='SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol='Tls12'; $t="$env:TEMP\cb"; Remove-Item $t -Recurse -Force -ErrorAction SilentlyContinue; New-Item -Type Directory -Force $t | Out-Null; Invoke-WebRequest 'https://github.com/qhrud0000-blip/cavybot/archive/refs/heads/claude/cavybot-project-structure-l2aip0.zip' -OutFile "$t\r.zip"; tar -xf "$t\r.zip" -C $t; $rp=(Get-ChildItem "$t\cavybot-*\auto-fill\run.ps1").FullName; powershell -NoProfile -ExecutionPolicy Bypass -File $rp
 ```
 
 - 처음 실행: `config.json`이 메모장으로 열림 → 각 프로젝트 url 채우고 저장·닫기.
