@@ -1,0 +1,15 @@
+{
+  "_도움말": "이 파일을 config.json 으로 복사한 뒤, 각 프로젝트의 '실제 URL'을 채우세요. URL은 해당 프로젝트를 브라우저에서 연 주소창 값입니다. 비우면(빈 문자열) 그 항목은 건너뜁니다.",
+  "projects": [
+    { "platform": "chatgpt", "name": "아이라",        "url": "", "file": "../프로젝트-지침/완성본/ChatGPT_아이라.txt" },
+    { "platform": "chatgpt", "name": "쇼핑쇼츠",        "url": "", "file": "../프로젝트-지침/완성본/ChatGPT_쇼핑쇼츠.txt" },
+    { "platform": "chatgpt", "name": "가사",           "url": "", "file": "../프로젝트-지침/완성본/ChatGPT_가사.txt" },
+    { "platform": "chatgpt", "name": "바이브코딩강의",   "url": "", "file": "../프로젝트-지침/완성본/ChatGPT_바이브코딩강의.txt" },
+    { "platform": "chatgpt", "name": "2026카합10269",   "url": "", "file": "../프로젝트-지침/완성본/ChatGPT_2026카합10269.txt" },
+    { "platform": "chatgpt", "name": "비밀번호",        "url": "", "file": "../프로젝트-지침/완성본/ChatGPT_비밀번호.txt" },
+    { "platform": "claude",  "name": "인스타/유튜브/블로그", "url": "", "file": "../프로젝트-지침/완성본/Claude_인스타-유튜브-블로그.txt" },
+    { "platform": "claude",  "name": "일일 업무 자동화 및 사업 계획 대시보드", "url": "", "file": "../프로젝트-지침/완성본/Claude_일일업무자동화-사업계획-대시보드.txt" },
+    { "platform": "claude",  "name": "분야별 자동화 AI 기획", "url": "", "file": "../프로젝트-지침/완성본/Claude_분야별-자동화-AI기획.txt" },
+    { "platform": "claude",  "name": "상품상세페이지 자동화", "url": "", "file": "../프로젝트-지침/완성본/Claude_상품상세페이지-자동화.txt" }
+  ]
+}
