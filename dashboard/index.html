@@ -58,6 +58,19 @@
     </div>
   </div>
 
+  <!-- 보안 금고 모달 (이중보안) -->
+  <div id="vaultModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="vaultTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="vaultTitle">🔐 관리자 계정정보 — 보안 금고</h2>
+        <button id="vaultClose" class="btn ghost" aria-label="닫기">✕</button>
+      </div>
+      <div id="vaultBody"></div>
+      <p class="foot">🔒 모든 항목은 이 브라우저에서 <b>AES 암호화</b>되어 저장됩니다. 깃/서버에 올라가지 않습니다.
+        높은 가치의 비밀은 1Password·Bitwarden 같은 전문 매니저 사용을 권장합니다.</p>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>

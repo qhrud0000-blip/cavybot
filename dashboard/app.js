@@ -87,6 +87,24 @@ const DEFAULT_BOARD = [
       { id: "arting", label: "Arting AI (무료)", url: "https://arting.ai/text-to-video" },
     ],
   },
+  {
+    id: "admin",
+    title: "🔐 관리자 계정정보",
+    items: [
+      { id: "vault-open", label: "🔐 보안 금고 열기 (이중보안)", action: "openVault", cta: true },
+      { id: "vault-note", type: "sub", label: "⚠️ 실제 비밀번호는 깃에 저장 금지 · 금고에만" },
+      { id: "vault-guide", label: "관리 가이드", url: "../관리자계정정보/README.md" },
+    ],
+  },
+  {
+    id: "vendor",
+    title: "🤝 거래처",
+    items: [
+      { id: "vendor-sub", type: "sub", label: "거래처 파일은 헤더의 📎 버튼으로 업로드" },
+      { id: "vendor-guide", label: "거래처 관리 가이드", url: "../거래처/README.md" },
+      { id: "vendor-vault", label: "🔐 거래처 계정은 보안 금고에", action: "openVault" },
+    ],
+  },
 ];
 
 const board = document.getElementById("board");
@@ -95,7 +113,13 @@ let state = loadState();
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      // 저장된 배치에 없는 새 기본 카테고리는 자동 추가(기존 배치 보존)
+      const ids = new Set(saved.map((c) => c.id));
+      DEFAULT_BOARD.forEach((d) => { if (!ids.has(d.id)) saved.push(structuredClone(d)); });
+      return saved;
+    }
   } catch (e) {}
   return structuredClone(DEFAULT_BOARD);
 }
@@ -309,7 +333,7 @@ function persistFromDom() {
 
 // ---------- MCP 추천 모달 ----------
 const modal = document.getElementById("mcpModal");
-const ACTIONS = { openMcp };
+const ACTIONS = { openMcp, openVault };
 
 async function openMcp() {
   modal.classList.remove("hidden");
@@ -557,5 +581,135 @@ document.getElementById("fileInput").addEventListener("change", (e) => { handleU
 document.querySelectorAll(".doc-create [data-make]").forEach((b) =>
   b.addEventListener("click", () => makeDoc(b.dataset.make)));
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") fileModal.classList.add("hidden"); });
+
+// ====================== 보안 금고 (이중보안 / 클라이언트 암호화) ======================
+// 마스터 비밀번호 + PIN(이중) → PBKDF2 → AES-GCM. 평문은 절대 저장/전송하지 않음.
+const VKEY = "cavybot.vault.v1";
+const vaultModal = document.getElementById("vaultModal");
+let vKey = null, vSalt = null, vEntries = null;
+
+function b64(bytes) { let s = ""; bytes.forEach((b) => (s += String.fromCharCode(b))); return btoa(s); }
+function b64dec(str) { const bin = atob(str); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+
+async function deriveKey(pw, pin, salt) {
+  const enc = new TextEncoder();
+  const base = await crypto.subtle.importKey("raw", enc.encode(pw + " " + pin), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt, iterations: 250000, hash: "SHA-256" },
+    base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
+  );
+}
+async function vaultSave() {
+  const enc = new TextEncoder();
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, vKey, enc.encode(JSON.stringify(vEntries)));
+  localStorage.setItem(VKEY, JSON.stringify({ v: 1, salt: b64(vSalt), iv: b64(iv), ct: b64(new Uint8Array(ct)) }));
+}
+async function vaultSetup(pw, pin) {
+  vSalt = crypto.getRandomValues(new Uint8Array(16));
+  vKey = await deriveKey(pw, pin, vSalt);
+  vEntries = [];
+  await vaultSave();
+}
+async function vaultUnlock(pw, pin) {
+  const stored = JSON.parse(localStorage.getItem(VKEY));
+  vSalt = b64dec(stored.salt);
+  vKey = await deriveKey(pw, pin, vSalt);
+  const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64dec(stored.iv) }, vKey, b64dec(stored.ct));
+  vEntries = JSON.parse(new TextDecoder().decode(pt));
+}
+function vaultLock() { vKey = null; vSalt = null; vEntries = null; }
+
+function openVault() {
+  if (!window.crypto || !crypto.subtle) { alert("이 브라우저는 암호화를 지원하지 않습니다. https 또는 localhost로 열어주세요."); return; }
+  vaultLock();
+  vaultModal.classList.remove("hidden");
+  renderVault();
+}
+
+function renderVault() {
+  const body = document.getElementById("vaultBody");
+  if (vEntries) return renderVaultEntries(body);
+  const setup = !localStorage.getItem(VKEY);
+  body.innerHTML = setup
+    ? `<p class="vmsg">처음이시네요. <b>이중보안</b>을 설정하세요. (둘 다 있어야 열립니다)</p>
+       <div class="vform">
+         <input id="vp1" type="password" placeholder="마스터 비밀번호" />
+         <input id="vp2" type="password" placeholder="마스터 비밀번호 확인" />
+         <input id="vpin" type="password" inputmode="numeric" placeholder="2차 PIN (숫자)" />
+         <button id="vgo" class="btn">금고 만들기</button>
+       </div>
+       <p class="vwarn">⚠️ 비밀번호/PIN을 잊으면 <b>복구 불가</b>합니다. 이 둘은 어디에도 저장되지 않습니다.</p>`
+    : `<p class="vmsg">🔒 잠겨 있습니다. 마스터 비밀번호와 PIN을 입력하세요.</p>
+       <div class="vform">
+         <input id="vp1" type="password" placeholder="마스터 비밀번호" />
+         <input id="vpin" type="password" inputmode="numeric" placeholder="2차 PIN" />
+         <button id="vgo" class="btn">열기</button>
+       </div>
+       <p id="vfail" class="vwarn"></p>`;
+  document.getElementById("vgo").addEventListener("click", async () => {
+    const pw = document.getElementById("vp1").value;
+    const pin = document.getElementById("vpin").value;
+    if (setup) {
+      const pw2 = document.getElementById("vp2").value;
+      if (!pw || !pin) return alert("비밀번호와 PIN을 모두 입력하세요.");
+      if (pw !== pw2) return alert("비밀번호 확인이 일치하지 않습니다.");
+      await vaultSetup(pw, pin); renderVault();
+    } else {
+      try { await vaultUnlock(pw, pin); renderVault(); }
+      catch (e) { document.getElementById("vfail").textContent = "❌ 비밀번호 또는 PIN이 올바르지 않습니다."; }
+    }
+  });
+}
+
+function renderVaultEntries(body) {
+  body.innerHTML = `
+    <div class="vtop">
+      <button id="vadd" class="btn">＋ 계정 추가</button>
+      <button id="vlock" class="btn ghost">🔒 잠그기</button>
+    </div>
+    <div id="vlist" class="vlist"></div>`;
+  const list = document.getElementById("vlist");
+  if (!vEntries.length) list.innerHTML = '<div class="file-empty">저장된 계정이 없습니다. ＋로 추가하세요.</div>';
+  vEntries.forEach((e, i) => {
+    const row = document.createElement("div");
+    row.className = "ventry";
+    row.innerHTML = `<div class="vsvc">${esc(e.service || "(이름없음)")}</div>
+      <div class="vfield"><span class="vk">ID</span> <code>${esc(e.username || "")}</code></div>
+      <div class="vfield"><span class="vk">PW</span> <code class="vpw" data-pw="${esc(e.password || "")}">••••••••</code></div>
+      ${e.note ? `<div class="vnote">${esc(e.note)}</div>` : ""}`;
+    const tools = document.createElement("div");
+    tools.className = "ventry-tools";
+    tools.appendChild(toolBtn("👁", "비번 보기/숨기기", () => {
+      const c = row.querySelector(".vpw");
+      c.textContent = c.textContent === "••••••••" ? c.dataset.pw : "••••••••";
+    }));
+    tools.appendChild(toolBtn("⧉ID", "ID 복사", () => navigator.clipboard?.writeText(e.username || "")));
+    tools.appendChild(toolBtn("⧉PW", "비번 복사", () => navigator.clipboard?.writeText(e.password || "")));
+    tools.appendChild(toolBtn("✎", "수정", () => editEntry(i)));
+    tools.appendChild(toolBtn("🗑", "삭제", async () => {
+      if (!confirm("이 계정을 삭제할까요?")) return; vEntries.splice(i, 1); await vaultSave(); renderVault();
+    }));
+    row.appendChild(tools);
+    list.appendChild(row);
+  });
+  document.getElementById("vadd").addEventListener("click", () => editEntry(-1));
+  document.getElementById("vlock").addEventListener("click", () => { vaultLock(); renderVault(); });
+}
+
+async function editEntry(i) {
+  const cur = i >= 0 ? vEntries[i] : { service: "", username: "", password: "", note: "" };
+  const service = prompt("서비스/사이트 이름:", cur.service); if (service == null) return;
+  const username = prompt("아이디:", cur.username); if (username == null) return;
+  const password = prompt("비밀번호:", cur.password); if (password == null) return;
+  const note = prompt("메모(선택):", cur.note || ""); if (note == null) return;
+  const entry = { service: service.trim(), username: username.trim(), password, note: note.trim() };
+  if (i >= 0) vEntries[i] = entry; else vEntries.push(entry);
+  await vaultSave(); renderVault();
+}
+
+document.getElementById("vaultClose").addEventListener("click", () => { vaultLock(); vaultModal.classList.add("hidden"); });
+vaultModal.addEventListener("click", (e) => { if (e.target === vaultModal) { vaultLock(); vaultModal.classList.add("hidden"); } });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") { vaultLock(); vaultModal.classList.add("hidden"); } });
 
 render();

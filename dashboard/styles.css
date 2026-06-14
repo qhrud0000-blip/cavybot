@@ -160,3 +160,20 @@ button.item-main.asbtn { cursor: pointer; }
 .file-row .fmeta { color: var(--muted); font-size: 12px; white-space: nowrap; }
 .file-row .frm { color: var(--muted); }
 .file-empty { color: var(--muted); font-size: 13px; padding: 8px 2px; }
+
+/* 보안 금고 */
+.vmsg { font-size: 14px; }
+.vwarn { color: var(--warn); font-size: 12px; margin-top: 10px; }
+.vform { display: flex; flex-direction: column; gap: 8px; max-width: 360px; margin: 12px 0; }
+.vform input { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
+  color: var(--text); padding: 10px 12px; font-size: 14px; }
+.vform input:focus { outline: none; border-color: var(--accent); }
+.vtop { display: flex; gap: 8px; margin-bottom: 12px; }
+.vlist { display: flex; flex-direction: column; gap: 10px; }
+.ventry { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; position: relative; }
+.vsvc { font-weight: 700; margin-bottom: 6px; }
+.vfield { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; margin: 2px 0; }
+.vfield code { color: var(--text); background: rgba(255,255,255,.05); padding: 2px 6px; border-radius: 6px; }
+.vk { display: inline-block; width: 26px; color: var(--accent); font-weight: 700; }
+.vnote { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.ventry-tools { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }

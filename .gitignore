@@ -3,6 +3,16 @@
 .env.local
 *.key
 
+# 자격증명/비밀번호 — 절대 커밋 금지 (README 외 모든 파일 차단)
+관리자계정정보/*
+!관리자계정정보/README.md
+*.secret
+*secrets*
+vault-export*.json
+거래처/*.csv
+거래처/*.xlsx
+거래처/*.pdf
+
 # 의존성/빌드
 node_modules/
 dist/
