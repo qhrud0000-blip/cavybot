@@ -7,6 +7,16 @@ const STORAGE_KEY = "cavybot.dashboard.v1";
 // item.action 이 있으면 버튼(특수 동작), url 이 있으면 링크, type:"sub" 면 하위 카테고리 헤더
 const DEFAULT_BOARD = [
   {
+    id: "start",
+    title: "🚀 시작하기",
+    items: [
+      { id: "signup", label: "✅ 무료 가입 체크리스트", url: "무료가입-체크리스트.md", cta: true },
+      { id: "start-sub", type: "sub", label: "가이드" },
+      { id: "useorder", label: "사용 순서 가이드", url: "../공통/사용-순서-가이드.md" },
+      { id: "profile", label: "마스터 프로필", url: "../공통/마스터-프로필.md" },
+    ],
+  },
+  {
     id: "content",
     title: "📝 콘텐츠 제작",
     items: [
@@ -131,7 +141,7 @@ function renderItem(it) {
     el.className = "item subheader";
   } else {
     el = document.createElement("a");
-    el.className = "item";
+    el.className = it.cta ? "item cta" : "item";
     el.href = it.url || "#";
     if (it.url && /^https?:/.test(it.url)) { el.target = "_blank"; el.rel = "noopener"; }
   }
