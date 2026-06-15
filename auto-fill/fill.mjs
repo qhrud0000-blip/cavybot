@@ -18,6 +18,7 @@ import { chromium } from "playwright";
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
+import { homedir } from "node:os";
 import readline from "node:readline";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -75,7 +76,7 @@ async function tryAutoFill(page, text) {
 
 async function main() {
   const cfg = loadConfig();
-  const userDataDir = join(__dirname, ".user-data");
+  const userDataDir = join(homedir(), "cavybot-auto", ".user-data");
 
   const context = await chromium.launchPersistentContext(userDataDir, {
     headless: false,
