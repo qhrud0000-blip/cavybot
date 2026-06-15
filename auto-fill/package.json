@@ -1,0 +1,15 @@
+{
+  "name": "cavybot-auto-fill",
+  "private": true,
+  "type": "module",
+  "version": "1.1.0",
+  "description": "본인 PC에서 실행: ChatGPT/Claude 프로젝트 지침 자동 입력 도우미 (로그인·2FA는 본인이 직접)",
+  "scripts": {
+    "setup": "npx playwright install chromium",
+    "start": "node fill.mjs",
+    "claude": "node claude-fill.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  }
+}

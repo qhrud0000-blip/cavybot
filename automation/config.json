@@ -1,0 +1,21 @@
+{
+  "_comment": "카드 없이 무료 한도 안에서만 도는 일일 자동화 설정. n8n 워크플로가 이 값을 읽어 하루 처리량을 제한합니다.",
+  "daily": {
+    "maxProductsPerDay": 3,
+    "_note_maxProducts": "Firecrawl 무료 1,000크레딧/월 ≈ 33페이지/일. 안전하게 상품 3개/일(상품당 수 페이지)로 제한.",
+    "keywords": ["홈오피스 생산성", "재택 가젯", "AI 자동화 소품"],
+    "runHourKST": 6
+  },
+  "freeQuota": {
+    "firecrawl": { "monthly": 1000, "perRunBudget": 30, "card": false },
+    "apify": { "monthlyUSD": 5, "card": false, "note": "Firecrawl 대신 쓸 경우" },
+    "googleAIStudio": { "model": "gemini-1.5-flash", "free": true, "card": false, "note": "카피·요약 생성. 분당 요청 제한 있으니 배치 작게" },
+    "video": { "tool": "Arting/Upsampler", "signup": false, "card": false, "note": "API 대신 수동/무가입 사용으로 완전 무료 유지" },
+    "design": { "tool": "Canva/Gamma", "free": true, "card": false }
+  },
+  "compliance": {
+    "affiliateDisclosure": "이 포스팅은 쿠팡파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+    "imagePolicy": "크롤링 이미지 직접 게시 금지 → 사양/키워드만 활용, 비주얼은 AI 재생성 또는 직접 촬영",
+    "linkPolicy": "쿠팡에 실제 존재하는 정품에만 파트너스 링크"
+  }
+}

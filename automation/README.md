@@ -1,0 +1,55 @@
+# 무료 자동화 파이프라인 (카드 없이 / 일일 한도)
+
+"매일 생성되는 무료 한도만큼만" 도는 쿠팡 상세페이지 초안 자동화입니다.
+영상·이미지 유료 API는 기본 **미사용**(무가입 도구로 대체)해서 **카드 없이 0원** 유지가 목표입니다.
+
+## 무엇을 자동화하나
+매일 06:00 → 키워드 리서치(Firecrawl) → 사양만 추출 → 상세페이지 카피 생성(Gemini, 무료) →
+대가성 문구·쿠팡링크 자리 포함한 **초안(DRAFT)** 산출. 게시 전 사람 검수 1회.
+
+> ⚠️ 크롤링 이미지 그대로 게시 금지. 비주얼은 무료 디자인/영상 도구로 **직접 생성**.
+
+## 카드 없이 쓰는 무료 스택
+
+| 단계 | 도구 | 무료 한도 | 카드 |
+|------|------|-----------|:---:|
+| 크롤링 | Firecrawl | 1,000 크레딧/월(≈33p/일) | ❌ |
+| 카피 생성 | Google AI Studio (Gemini Flash) | 무료(분당 제한) | ❌ |
+| 디자인 | Canva / Gamma | 무료 티어 | ❌ |
+| 영상 | Arting / Upsampler | 무가입 | ❌ |
+| 오케스트레이터 | n8n | 셀프호스팅 무료 | ❌ |
+| 제휴 | 쿠팡파트너스 | 무료(승인) | ❌ |
+
+→ `config.json`의 `daily.maxProductsPerDay`(기본 3)로 하루 처리량을 **무료 한도 안에 강제**합니다.
+
+## 설치 & 실행
+
+1) n8n 무료 셀프호스팅
+```bash
+docker run -it --rm -p 5678:5678 -v n8n_data:/home/node/.n8n n8nio/n8n
+# http://localhost:5678
+```
+2) 키 등록: `.env.example` → `.env` 복사 후 채우기. n8n 실행 시 환경변수로 주입하거나 Credentials에 등록.
+3) n8n 화면 → Import from File → 아래 중 원하는 저장 버전 선택.
+   - 기본(저장 노드 직접 연결): `n8n-workflow.json`
+   - **구글 시트 저장**: `n8n-workflow-google-sheets.json` (Google Sheets Credentials 필요, `YOUR_GOOGLE_SHEET_ID` 교체)
+   - **노션 저장**: `n8n-workflow-notion.json` (Notion Credentials 필요, `YOUR_NOTION_DATABASE_ID` + 속성명 교체)
+4) 노드의 `{{$env.FIRECRAWL_API_KEY}}`, `{{$env.GEMINI_API_KEY}}`가 실제 키를 읽는지 확인.
+5) 구글시트/노션 버전을 쓰면 저장 노드가 이미 연결돼 있습니다. (속성/시트명만 본인 것으로 교체)
+   - 노션 버전은 노션 DB 속성명(`상태`, `참고링크`, `쿠팡링크`)을 실제 DB에 맞게 매핑하세요.
+6) 수동 1회 실행(Execute Workflow)으로 점검 → 정상이면 Activate.
+
+## 무료 유지 팁 (매일 생성분만 사용)
+- `maxProductsPerDay`는 작게(3~5) 유지. 늘리면 무료 크레딧이 일찍 소진됩니다.
+- Gemini는 분당 요청 제한이 있으니 배치를 작게(직렬) 처리.
+- 영상/이미지 API(fal/Replicate)는 **연결하지 않음** — 무가입 도구로 수동 제작해 0원 유지.
+- 한도 초과가 걱정되면 Firecrawl 대신 Apify($5/월) 또는 무가입 도구로 수동 리서치.
+
+## 안전/컴플라이언스 (필수)
+- 모든 산출물에 대가성 문구 자동 포함(워크플로에 내장).
+- 쿠팡에 **실제 존재하는 정품**에만 파트너스 링크.
+- 크롤링은 사양/키워드 레퍼런스로만. 이미지·문구 복제 게시 금지.
+- 산출물은 항상 `DRAFT` — 게시 전 과장·표기 검수(`../claude-프로젝트/skills/brand-voice-check`).
+
+> 참고: 이 워크플로는 **스타터 템플릿**입니다. n8n 버전에 따라 노드 typeVersion이 다르면 import 후 빨간 노드를
+> 같은 종류로 한 번 다시 선택하면 됩니다.
